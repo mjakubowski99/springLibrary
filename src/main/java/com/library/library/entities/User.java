@@ -9,7 +9,7 @@ import java.util.Set;
 public class User extends WithTimestampsEntity{
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = "id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
@@ -19,7 +19,7 @@ public class User extends WithTimestampsEntity{
 
     private String password;
 
-    @OneToMany
+    @ManyToMany
     public Set<Role> roles = new HashSet<>();
 
     public Integer getId() {

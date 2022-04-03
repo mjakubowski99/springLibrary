@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "security.basic.enabled",
+      "type": "java.lang.String",
+      "description": "Description for security.basic.enabled."
+    },
+    {
+      "name": "app.domain",
+      "type": "java.lang.String",
+      "description": "Description for app.domain."
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Description for jwt.secret."
+    }
+  ] }
