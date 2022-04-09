@@ -1,23 +1,23 @@
-package com.library.library.requests;
+package com.library.library.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public final class UserCreateRequest {
+public final class UserCreateDto {
 
-    @NotBlank
+    @NotBlank(message="Pole email jest wymagane")
     @Email
     private String email;
 
-    @NotBlank
-    @Size(min=8, max=10)
+    @NotBlank(message="Pole username jest wymagane")
+    @Size(min=8, max=10, message = "Długość pola username musi zawierać się w zakresie od 8 do 10")
     private String username;
 
-    @Size(min=10, max=100)
+    @NotBlank(message="Pole hasło jest wymagane")
+    @Size(min=10, max=100, message = "Hasło musi mieć długość od 10 do 100 znaków")
     private String password;
 
-    @NotBlank
     private String role;
 
     public void setEmail(String email) {

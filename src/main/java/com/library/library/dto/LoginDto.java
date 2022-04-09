@@ -1,6 +1,6 @@
-package com.library.library.requests;
+package com.library.library.dto;
 
-public class LoginRequest {
+public class LoginDto {
 
     private String login;
 

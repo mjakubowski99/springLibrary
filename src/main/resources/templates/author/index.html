@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout"
+>
+<div layout:fragment="content">
+
+    <div class="card shadow w-75 mx-auto mt-5">
+        <table class="table mx-auto w-50 mt-3 table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Identyfikator</th>
+                    <th scope="col">Imie i nazwisko</th>
+                </tr>
+            </thead>
+            <tbody id="author-row-container">
+            </tbody>
+        </table>
+
+        <ul class="pagination mx-auto" id="author-navigation">
+        </ul>
+    </div>
+
+    <script src="/paginator.js"></script>
+    <script>
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const authorContainer = document.getElementById('author-row-container');
+            const navigationContainer = document.getElementById('author-navigation');
+
+            const paginator = new Paginator(authorContainer, navigationContainer, '/library/authors/ajax', ['name']);
+            paginator.init();
+        });
+    </script>
+</div>
+</html>

@@ -1,6 +1,7 @@
 package com.library.library.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class User extends WithTimestampsEntity{
     private String password;
 
     @ManyToMany
-    public Set<Role> roles = new HashSet<>();
+    public Collection<Role> roles = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -54,7 +55,7 @@ public class User extends WithTimestampsEntity{
         return password;
     }
 
-    public Set<Role> getRoles(){
+    public Collection<Role> getRoles(){
         return roles;
     }
 
