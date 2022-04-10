@@ -1,11 +1,12 @@
 
 class Paginator{
 
-    constructor(dataContainer, navigationContainer, url, fields) {
+    constructor(dataContainer, navigationContainer, url, deleteUrl, fields) {
         this.currentPage = 0;
         this.dataContainer = dataContainer;
         this.navigationContainer = navigationContainer;
         this.url = url;
+        this.deleteUrl = deleteUrl;
         this.pagesCount = 0;
         this.fields = fields;
     }
@@ -23,6 +24,15 @@ class Paginator{
             td.innerText = row[ this.fields[i] ];
             tr.appendChild(td);
         }
+
+        let td = document.createElement('td');
+        let a = document.createElement('a');
+        a.setAttribute('href', this.deleteUrl+'?id='+row.id);
+        a.setAttribute('class', 'btn btn-danger');
+        a.innerText = "Usuń";
+
+        td.appendChild(a);
+        tr.appendChild(td);
 
         return tr;
     }
@@ -47,7 +57,6 @@ class Paginator{
 
         li.setAttribute('class', 'page-item');
         a.setAttribute('class', 'page-link');
-        a.setAttribute('href', '#');
         a.setAttribute('data-page', pageNumber-1);
         a.innerText = pageNumber;
 
@@ -64,7 +73,6 @@ class Paginator{
     }
 
     initNavigation(){
-        console.log(this.pagesCount);
         for(let i=0; i<this.pagesCount; i++){
             this.navigationContainer.appendChild( this.makeNavigationPageElement(i+1) );
         }

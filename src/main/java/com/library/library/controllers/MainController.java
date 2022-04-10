@@ -15,6 +15,6 @@ public class MainController {
 
     @GetMapping(path="/home")
     public String hello(){
-        return "index.html";
+        return "authors-and-publishing-houses.html";
     }
 }

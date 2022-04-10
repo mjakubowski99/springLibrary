@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout"
+>
+<div layout:fragment="content">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Library cms</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/admin/authors-and-publishing-houses/manage">Zarządzanie autorami i wydawnictwami <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/admin/books/manage">Zarządzanie książkami  </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="card shadow w-75 mx-auto mt-5">
+        <div class="card-header bg-dark text-light">
+            <div class="h5"> Książki </div>
+        </div>
+        <div class="card-body">
+
+            <div class="row mx-auto">
+                <div>
+                    <button class="btn btn-primary ml-1" data-toggle="modal" data-target="#book-modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        Dodaj
+                    </button>
+                </div>
+                <form class="form-inline mx-1 my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Wyszukaj książkę">
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
+                </form>
+            </div>
+            <table class="table mt-3 table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Identyfikator</th>
+                    <th scope="col">Nazwa</th>
+                    <th scope="col">Cena</th>
+                    <th scope="col">Ilość w magazynie</th>
+                    <th scope="col">Zdjęcie</th>
+                    <th scope="col">Autor</th>
+                    <th scope="col">Wydawnictwo</th>
+                    <th scope="col">Akcje</th>
+                </tr>
+                </thead>
+                <tbody id="author-row-container">
+                </tbody>
+            </table>
+
+            <ul class="pagination mr-1" id="author-navigation">
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="book-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Dodaj książkę</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form th:action="@{/admin/books}" th:object="${bookForm}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <ul class="form-group w-75 mx-auto" th:if="${#fields.hasAnyErrors()}">
+                            <li th:each="err : ${#fields.allErrors()}" class="text-danger" th:text="${err}"/>
+                        </ul>
+
+                        <div class="form-group">
+                            <input type="text" th:field="*{name}" class="form-control" placeholder="Nazwa"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" th:field="*{price}" class="form-control" placeholder="Cena"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" th:field="*{quantity}" class="form-control" placeholder="Ilość w magazynie"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Wydawnictwo:</label>
+                            <select class="form-control" th:field="*{publishingHouse}">
+                                <option value="Helion">Helion</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Autor:</label>
+                            <select class="form-control" th:field="*{author}">
+                                <option value="Maciek Polak">Maciek Polak</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Zdjęcie:</label>
+                            <input type="file" th:field="*{photo}" onchange="loadFile(event)"/>
+                            <img src="#" id="book-image" style="max-width: 300px; max-height: 300px;" alt=""/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            var loadFile = function(event) {
+                let output = document.getElementById('book-image');
+                output.src = URL.createObjectURL(event.target.files[0]);
+                output.onload = function() {
+                    URL.revokeObjectURL(output.src) // free memory
+                }
+            };
+        </script>
+    </div>
+</div>
+</html>

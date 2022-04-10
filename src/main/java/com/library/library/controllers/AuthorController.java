@@ -1,19 +1,14 @@
 package com.library.library.controllers;
 
+import com.library.library.dto.AuthorDto;
 import com.library.library.entities.Author;
 import com.library.library.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.persistence.criteria.CriteriaBuilder;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path="/library")
+@RequestMapping(path="/admin")
 public class AuthorController {
 
     @Autowired
@@ -25,10 +20,18 @@ public class AuthorController {
         return authorService.getAuthors(page);
     }
 
-    @GetMapping(path="/authors")
-    public String index(){
-        return "author/index";
+    @PostMapping(path="/authors")
+    public String create(@ModelAttribute("authorForm") AuthorDto authorDto){
+        authorService.create(authorDto.getName());
+
+        return "redirect:/admin/authors-and-publishing-houses/manage";
     }
 
+    @GetMapping(path="/authors/delete")
+    public String delete(@RequestParam Integer id){
+        authorService.delete(id);
+
+        return "redirect:/admin/authors-and-publishing-houses/manage";
+    }
 
 }
