@@ -18,6 +18,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -35,29 +37,38 @@ public class BookService {
         return bookRepository.findAll( PageRequest.of(page, 10) );
     }
 
+    public Iterable<Book> booksAll(){
+        return bookRepository.findAll();
+    }
+
     public void create(BookCreateDto bookCreateDto) throws IOException, PublishingHouseNotFoundException, AuthorNotFoundException {
-        String fileName = StringUtils.cleanPath(bookCreateDto.getPhoto().getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(bookCreateDto.getPhoto().getOriginalFilename()));
 
         Book book = new Book();
         book.setName( bookCreateDto.getName() );
         book.setPrice( bookCreateDto.getPrice() );
         book.setPhoto(fileName);
+        book.setQuantity( bookCreateDto.getQuantity() );
 
-        Author author = authorRepository.getByName(bookCreateDto.getAuthor());
-        if( author == null ){
+        Optional<Author> author = authorRepository.findById( bookCreateDto.getAuthor() );
+        if( author.isEmpty()){
             throw new AuthorNotFoundException();
         }
-        PublishingHouse publishingHouse = publishingHouseRepository.getByName(bookCreateDto.getPublishingHouse());
-        if( publishingHouse == null ){
+        Optional<PublishingHouse> publishingHouse = publishingHouseRepository.findById( bookCreateDto.getPublishingHouse() );
+        if( publishingHouse.isEmpty() ){
             throw new PublishingHouseNotFoundException();
         }
 
-        book.setAuthor(author);
-        book.setPublishingHouse(publishingHouse);
+        book.setAuthor( author.stream().findFirst().orElse(null) );
+        book.setPublishingHouse( publishingHouse.stream().findFirst().orElse(null) );
 
         Book savedBook = bookRepository.save(book);
 
-        String uploadDir = "book-photos/" + savedBook.getId();
+        String uploadDir = "src/main/resources/static/book-photos/"+book.getId().toString();
         FileUploadUtil.saveFile(uploadDir, fileName, bookCreateDto.getPhoto());
+    }
+
+    public void delete(Integer id){
+        bookRepository.deleteById(id);
     }
 }

@@ -21,5 +21,19 @@
                 </form>
             </div>
         </nav>
+
+        <div class="container">
+
+            <div class="card mt-3">
+                <div class="card-header"> Lista książek </div>
+                <div class="card-body">
+                    <div th:each="book: ${books}" class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <p class="card-text" th:text="${book.name}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </html>

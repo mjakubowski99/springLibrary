@@ -23,12 +23,12 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping(path="/books/ajax")
-    public Iterable<Book> books(@RequestParam Integer page){
+    @GetMapping(path="/books/ajax", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Iterable<Book> books(@RequestParam Integer page){
         return bookService.books(page);
     }
 
-    @PostMapping(path="/books", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping (path="/books", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public String create(@Valid @ModelAttribute("bookForm") BookCreateDto bookCreateDto, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
@@ -49,6 +49,12 @@ public class BookController {
             return "admin/books";
         }
 
-        return "redirect:/admin/books";
+        return "redirect:/admin/books/manage";
+    }
+
+    @GetMapping(path="books/delete")
+    public String delete(@RequestParam Integer id){
+        bookService.delete(id);
+        return "redirect:/admin/books/manage";
     }
 }

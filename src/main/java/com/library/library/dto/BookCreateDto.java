@@ -18,11 +18,9 @@ public class BookCreateDto {
     @Min(value = 0, message = "Ilość musi wynosić conajmniej 0")
     private Integer quantity;
 
-    @NotBlank(message = "Pole wydawnictwo musi być uzupełnione")
-    private String publishingHouse;
+    private Integer publishingHouse;
 
-    @NotBlank(message="Pole autor musi być uzupełnione")
-    private String author;
+    private Integer author;
 
     private MultipartFile photo;
 
@@ -34,19 +32,19 @@ public class BookCreateDto {
         this.name = name;
     }
 
-    public void setPublishingHouse(String publishingHouse) {
+    public void setPublishingHouse(Integer publishingHouse) {
         this.publishingHouse = publishingHouse;
     }
 
-    public String getPublishingHouse() {
+    public Integer getPublishingHouse() {
         return publishingHouse;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Integer author) {
         this.author = author;
     }
 
-    public String getAuthor() {
+    public Integer getAuthor() {
         return author;
     }
 

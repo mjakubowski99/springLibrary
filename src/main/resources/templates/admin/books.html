@@ -38,10 +38,6 @@
                         Dodaj
                     </button>
                 </div>
-                <form class="form-inline mx-1 my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Wyszukaj książkę">
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Szukaj</button>
-                </form>
             </div>
             <table class="table mt-3 table-striped table-bordered">
                 <thead class="thead-dark">
@@ -76,7 +72,7 @@
                     </button>
                 </div>
 
-                <form th:action="@{/admin/books}" th:object="${bookForm}" method="POST" enctype="multipart/form-data">
+                <form th:action="@{/admin/books}" th:object="${bookForm}" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <ul class="form-group w-75 mx-auto" th:if="${#fields.hasAnyErrors()}">
                             <li th:each="err : ${#fields.allErrors()}" class="text-danger" th:text="${err}"/>
@@ -94,13 +90,13 @@
                         <div class="form-group">
                             <label>Wydawnictwo:</label>
                             <select class="form-control" th:field="*{publishingHouse}">
-                                <option value="Helion">Helion</option>
+                                <option th:each="publishingHouse: ${publishingHouses}" th:value="${publishingHouse.id}" th:text="${publishingHouse.name}"></option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Autor:</label>
                             <select class="form-control" th:field="*{author}">
-                                <option value="Maciek Polak">Maciek Polak</option>
+                                <option th:each="author: ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
                             </select>
                         </div>
 
@@ -126,6 +122,87 @@
                     URL.revokeObjectURL(output.src) // free memory
                 }
             };
+
+            function createTd(text){
+                const td = document.createElement('td');
+                td.innerText = text;
+
+                return td;
+            }
+
+            function makeRow(row){
+                console.log(row);
+                const base = document.createElement('tr');
+                const idColumn = document.createElement('th');
+                idColumn.setAttribute('scope', 'row');
+                idColumn.innerText = row.id;
+
+                base.appendChild(idColumn);
+                base.appendChild( createTd( row.name ) );
+                base.appendChild( createTd( row.price ) );
+                base.appendChild( createTd( row.quantity ) );
+
+                const img = document.createElement('img');
+                img.setAttribute('src', '/book-photos/'+row.id+'/'+row.photo);
+                img.setAttribute('style', 'max-width: 100px; max-height: 100px');
+
+                base.appendChild( img );
+                base.appendChild( createTd( row.author.name) );
+                base.appendChild( createTd( row.publishingHouse.name) );
+
+                const deleteBtn = document.createElement('a');
+                deleteBtn.setAttribute('class', 'btn btn-danger');
+                deleteBtn.innerText = "Usuń";
+                deleteBtn.href = '/admin/books/delete?id='+row.id;
+
+                base.appendChild(deleteBtn);
+
+                return base;
+            }
+
+            function createPagination(pageCount){
+                const pagination = document.querySelector('.pagination');
+
+                for(let i=0; i<pageCount; i++){
+                    const li = document.createElement('li');
+                    li.setAttribute('class', 'page-item');
+                    const btn = document.createElement('button');
+                    btn.setAttribute('class', 'page-link');
+                    btn.setAttribute('data-page', i);
+                    btn.innerText = i+1;
+
+                    btn.onclick = pageClickEvent;
+                    li.appendChild(btn);
+                    pagination.appendChild(li);
+                }
+            }
+
+            const pageClickEvent = (event) => {
+                const page = event.target.dataset.page;
+                fetchBooksPage(page);
+            }
+
+
+            function fetchBooksPage(page){
+                return fetch('/admin/books/ajax?page='+page).then( (res) => res.json())
+                    .then( (res) => {
+                        let container = document.getElementById('author-row-container');
+                        container.innerHTML = '';
+                        let data = res.content;
+                        for(let row of data){
+                            const tableRow = makeRow(row);
+                            container.appendChild(tableRow);
+                        }
+                        return res;
+                    });
+            }
+
+            function initBooks(){
+                fetchBooksPage(0).then( (res) => {
+                    createPagination(res.totalPages);
+                })
+            }
+            initBooks();
         </script>
     </div>
 </div>

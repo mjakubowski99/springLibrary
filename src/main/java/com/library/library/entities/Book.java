@@ -13,6 +13,8 @@ public class Book {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
+    private Integer quantity;
+
     private String name;
 
     private Integer price;
@@ -59,6 +61,14 @@ public class Book {
 
     public String getPhoto() {
         return photo;
+    }
+
+    public void setQuantity(Integer quantity){
+        this.quantity = quantity;
+    }
+
+    public Integer getQuantity(){
+        return quantity;
     }
 
     public void setPhoto(String photo) {
