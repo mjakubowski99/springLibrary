@@ -51,6 +51,10 @@ public class ShoppingCart extends WithTimestampsEntity{
         this.books.add(book);
     }
 
+    public void deleteBook(Book book){
+        this.books.remove(book);
+    }
+
     public void setShoppingCartStatus(ShoppingCartStatus shoppingCartStatus){
         this.shoppingCartStatus = shoppingCartStatus;
     }

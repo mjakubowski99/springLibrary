@@ -13,11 +13,11 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                     </li>
                 </ul>
 
-                <button class="btn btn-success mx-1"> Zobacz koszyk </button>
+                <a href="/library/user/shopping-cart" class="btn btn-success mx-1"> Zobacz koszyk </a>
                 <form class="form-inline my-2 my-lg-0" method="POST" th:action="@{/logout}">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
                 </form>
@@ -73,6 +73,10 @@
                     let button = document.createElement('button');
                     button.setAttribute('class', 'btn btn-primary');
                     button.innerText = "Dodaj do koszyka";
+
+                    button.onclick = () => {
+                        window.location.href = "/library/shopping-cart/add?book="+row.id;
+                    }
 
                     cardBody.appendChild(button);
 

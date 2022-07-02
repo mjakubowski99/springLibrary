@@ -1,14 +1,15 @@
 package com.library.library.controllers;
 
 import com.library.library.entities.Book;
-import com.library.library.repositories.BookRepository;
+import com.library.library.repositories.RoleRepository;
 import com.library.library.repositories.UserRepository;
 import com.library.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/library") // This means URL's start with /library (after Application path)
@@ -19,6 +20,9 @@ public class MainController {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private BookService bookService;
 
     @GetMapping(path="/books/ajax", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -26,9 +30,4 @@ public class MainController {
         return bookService.booksAll();
     }
 
-    @GetMapping(path="/home")
-    public String hello(Model model){
-        model.addAttribute("books", bookService.booksAll());
-        return "index.html";
-    }
 }

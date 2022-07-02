@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout"
+>
+<div layout:fragment="content">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Library</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+
+            <a href="/library/user/shopping-cart" class="btn btn-success mx-1"> Zobacz koszyk </a>
+            <form class="form-inline my-2 my-lg-0" method="POST" th:action="@{/logout}">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card mt-5">
+            <div class="card-header">
+                Koszyk
+            </div>
+            <ul class="list-group list-group-flush list-container">
+            </ul>
+        </div>
+    </div>
+
+    <script>
+
+        function fillData(data){
+            const container = document.querySelector('.list-container');
+
+            for(let row of data){
+                let li = document.createElement('li');
+                li.setAttribute('class', 'list-group-item');
+                li.innerText = row.name;
+
+                let button = document.createElement('button');
+                button.innerText = "Usuń";
+                button.setAttribute('class', 'mx-2 btn btn-danger');
+
+                button.onclick = () => {
+                    window.location.href = "/library/shopping-cart/delete?book="+row.id;
+                }
+
+                li.appendChild(button);
+
+                container.appendChild(li);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            fetch('/library/user/shopping-cart/ajax')
+                .then( (res) => res.json() )
+                .then( (res) => fillData(res) );
+        });
+
+    </script>
+</div>
+</html>

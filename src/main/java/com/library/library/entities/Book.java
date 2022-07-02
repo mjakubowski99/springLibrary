@@ -3,6 +3,7 @@ package com.library.library.entities;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name = "books")
@@ -81,5 +82,18 @@ public class Book {
 
     public void setPublishingHouse(PublishingHouse publishingHouse) {
         this.publishingHouse = publishingHouse;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Objects.equals(id, book.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, quantity, name, price, photo, publishingHouse, author);
     }
 }
