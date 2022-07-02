@@ -16,6 +16,8 @@
                         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
                 </ul>
+
+                <button class="btn btn-success mx-1"> Zobacz koszyk </button>
                 <form class="form-inline my-2 my-lg-0" method="POST" th:action="@{/logout}">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
                 </form>
@@ -26,14 +28,73 @@
 
             <div class="card mt-3">
                 <div class="card-header"> Lista książek </div>
-                <div class="card-body">
-                    <div th:each="book: ${books}" class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <p class="card-text" th:text="${book.name}"></p>
-                        </div>
-                    </div>
+                <div class="mx-auto card-body" id="books-list">
+
                 </div>
             </div>
         </div>
+
+        <script>
+
+            function fillData(data){
+                const container = document.getElementById('books-list');
+                let iteration = 0;
+                let line = null;
+
+                for(let row of data ){
+                    if( iteration % 3 === 0 ){
+                        line = document.createElement('div');
+                        line.setAttribute('class', 'row');
+                    }
+
+                    let card = document.createElement('div');
+                    card.setAttribute('class', 'col-3 card m-2');
+                    card.setAttribute('style', "width: 18rem;");
+
+                    console.log(row);
+
+                    let cardImg = document.createElement('img');
+                    cardImg.setAttribute('src', '/book-photos/'+row.id+'/'+row.photo);
+                    cardImg.setAttribute('class', 'card-img-top');
+                    cardImg.setAttribute('style', 'max-width: 250px; height: 250px;');
+
+                    let cardBody = document.createElement('div');
+                    cardBody.classList.add('card-body');
+                    cardBody.innerText = "Tytuł: "+row.name;
+                    let d = document.createElement('div');
+                    d.innerText = "Cena: "+row.price+" PLN";
+                    d.setAttribute('style', 'font-weight: bold;');
+                    cardBody.appendChild(d);
+
+                    d = document.createElement('div');
+                    d.innerText = "Autor: "+row.author.name;
+                    cardBody.appendChild(d);
+
+                    let button = document.createElement('button');
+                    button.setAttribute('class', 'btn btn-primary');
+                    button.innerText = "Dodaj do koszyka";
+
+                    cardBody.appendChild(button);
+
+                    card.appendChild(cardImg);
+                    card.appendChild(cardBody);
+
+                    line.appendChild(card);
+
+                    if( iteration % 3 === 0 ){
+                        container.appendChild(line);
+                    }
+
+                    iteration++;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function(){
+                fetch('/library/books/ajax')
+                    .then( (res) => res.json() )
+                    .then( (res) => fillData(res) );
+            })
+        </script>
     </div>
+
 </html>

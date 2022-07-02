@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.Serializable;
 
 @Controller
 @RequestMapping(path="/admin")
-public class BookController {
+public class BookController implements Serializable {
 
     @Autowired
     private BookService bookService;

@@ -21,6 +21,11 @@ public class MainController {
     @Autowired
     private BookService bookService;
 
+    @GetMapping(path="/books/ajax", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Iterable<Book> books(){
+        return bookService.booksAll();
+    }
+
     @GetMapping(path="/home")
     public String hello(Model model){
         model.addAttribute("books", bookService.booksAll());
