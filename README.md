@@ -10,3 +10,4 @@ spring.datasource.username=root
 spring.datasource.password=
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 `
+Testową bazę danych można odnaleźć pod plikiem spring_library.sql
